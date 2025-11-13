@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="library-ongoing.css">
   <style>
-    /* Glass variables */
     :root {
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-border: 1px solid rgba(255, 255, 255, 0.3);
@@ -88,8 +87,8 @@
     }
 
     .controls button {
-      padding: 0.6rem 2rem;      /* ⬆️ Increased padding for size */
-  font-size: 1.1rem;   
+      padding: 0.6rem 2rem;
+      font-size: 1.1rem;
       border: none;
       border-radius: 100px;
       background: var(--gradient-purple-cyan);
@@ -192,102 +191,97 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const flashcardEl = document.getElementById("flashcard");
-  const flashcardFront = flashcardEl.querySelector(".flashcard-front");
-  const flashcardBack = flashcardEl.querySelector(".flashcard-back");
+  const frontEl = flashcardEl.querySelector(".flashcard-front");
+  const backEl = flashcardEl.querySelector(".flashcard-back");
   const deckTitleEl = document.getElementById("deckTitle");
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const editBtn = document.getElementById("editBtn");
-  const cardCounter = document.getElementById("cardCounter");
+  const counterEl = document.getElementById("cardCounter");
 
   let flashcards = [];
   let currentIndex = 0;
   let flipped = false;
 
-  try {
-    // Fetch flashcards for the current deck
-    const res = await fetch(`http://localhost:3000/api/decks/${deckId}/flashcards`);
-    flashcards = await res.json();
+  const showCard = () => {
+    const card = flashcards[currentIndex];
+    frontEl.textContent = card.term;
+    backEl.textContent = card.definition;
+    counterEl.textContent = `${currentIndex + 1} / ${flashcards.length}`;
+    flashcardEl.classList.remove("flipped");
+    flipped = false;
+  };
 
-    if (!flashcards.length) {
-      flashcardFront.textContent = "No flashcards in this deck.";
-      flashcardBack.textContent = "";
-      return;
+  const flipCard = () => {
+    flipped = !flipped;
+    flashcardEl.classList.toggle("flipped", flipped);
+  };
+
+  const nextCard = () => {
+    if (currentIndex < flashcards.length - 1) {
+      currentIndex++;
+      showCard();
     }
+  };
 
-    // Fetch deck details
-    const deckRes = await fetch(`http://localhost:3000/api/decks/${deckId}/detail`);
+  const prevCard = () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showCard();
+    }
+  };
+
+  try {
+    // ✅ Relative URLs only — Render-compatible
+    const [flashRes, deckRes] = await Promise.all([
+      fetch(`/api/decks/${deckId}/flashcards`),
+      fetch(`/api/decks/${deckId}/detail`)
+    ]);
+
+    flashcards = await flashRes.json();
     const deck = await deckRes.json();
     deckTitleEl.childNodes[0].textContent = deck.name;
 
-    function showCard() {
-      const card = flashcards[currentIndex];
-      flashcardFront.textContent = card.term;
-      flashcardBack.textContent = card.definition;
-      cardCounter.textContent = `${currentIndex + 1} / ${flashcards.length}`;
+    if (!flashcards.length) {
+      frontEl.textContent = "No flashcards in this deck.";
+      backEl.textContent = "";
+      counterEl.textContent = "0 / 0";
+      return;
     }
-
-    function flipCard() {
-      flipped = !flipped;
-      flashcardEl.classList.toggle("flipped", flipped);
-    }
-
-    function nextCard() {
-      if (currentIndex < flashcards.length - 1) {
-        currentIndex++;
-        flipped = false;
-        flashcardEl.classList.remove("flipped");
-        showCard();
-      }
-    }
-
-    function prevCard() {
-      if (currentIndex > 0) {
-        currentIndex--;
-        flipped = false;
-        flashcardEl.classList.remove("flipped");
-        showCard();
-      }
-    }
-
-    flashcardEl.addEventListener("click", flipCard);
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        flipCard();
-      } else if (e.code === "ArrowRight") {
-        nextCard();
-      } else if (e.code === "ArrowLeft") {
-        prevCard();
-      }
-    });
-
-    nextBtn.addEventListener("click", nextCard);
-    prevBtn.addEventListener("click", prevCard);
-
-    // 🧠 Store full deck + flashcards before redirecting
-    editBtn.addEventListener("click", () => {
-      localStorage.setItem("editDeckId", deckId);
-      localStorage.setItem("editDeckName", deck.name);
-      localStorage.setItem("editFlashcards", JSON.stringify(flashcards));
-      localStorage.setItem("currentDeckId", deckId); // ✅ keep the deck info
-      window.location.href = "editdecks.html";
-    });
 
     showCard();
   } catch (err) {
-    console.error("Error loading flashcards:", err);
-    flashcardFront.textContent = "Failed to load flashcards.";
-    flashcardBack.textContent = "";
+    console.error(err);
+    frontEl.textContent = "Failed to load flashcards.";
+    backEl.textContent = "";
   }
-});
-document.querySelectorAll('.coming-soon').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault(); // Stop navigation
-      alert('Feature coming soon!');
-    });
-  });
-</script>
 
+  flashcardEl.addEventListener("click", flipCard);
+  document.addEventListener("keydown", e => {
+    if (e.code === "Space") {
+      e.preventDefault();
+      flipCard();
+    } else if (e.code === "ArrowRight") nextCard();
+    else if (e.code === "ArrowLeft") prevCard();
+  });
+
+  nextBtn.addEventListener("click", nextCard);
+  prevBtn.addEventListener("click", prevCard);
+
+  editBtn.addEventListener("click", () => {
+    localStorage.setItem("editDeckId", deckId);
+    localStorage.setItem("editDeckName", deckTitleEl.textContent);
+    localStorage.setItem("editFlashcards", JSON.stringify(flashcards));
+    window.location.href = "editdecks.html";
+  });
+
+  document.querySelectorAll('.coming-soon').forEach(el =>
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      alert('Feature coming soon!');
+    })
+  );
+});
+  </script>
 </body>
 </html>
