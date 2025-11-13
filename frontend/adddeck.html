@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recallr - Add Deck</title>
   <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="./dashboard.css">
 </head>
 <body>
 
@@ -13,19 +13,19 @@
   <aside class="sidebar glass">
     <div class="sidebar__logo">Recallr</div>
     <div class="sidebar__divider"></div>
-    <a href="adddeck.html" class="sidebar__button">Add Deck</a>
+    <a href="./adddeck.html" class="sidebar__button">Add Deck</a>
     <a href="#" class="sidebar__button coming-soon">Add Folder</a>
     <div class="sidebar__divider"></div>
     <nav class="sidebar__nav">
-      <a href="dashboard.html" class="sidebar__link">Home</a>
-      <a href="library-ongoing.html" class="sidebar__link">My Library</a>
+      <a href="./dashboard.html" class="sidebar__link">Home</a>
+      <a href="./library-ongoing.html" class="sidebar__link">My Library</a>
       <div class="sidebar__link coming-soon">Settings</div>
       <div class="sidebar__divider"></div>
       <div class="sidebar__link coming-soon">Public Decks</div>
       <div class="sidebar__link coming-soon">Public Folders</div>
       <div class="sidebar__divider"></div>
     </nav>
-    <a href="login.html" class="sidebar__logout">Logout</a>
+    <a href="./login.html" class="sidebar__logout">Logout</a>
   </aside>
 
   <!-- Main Content -->
@@ -95,6 +95,7 @@
     </section>
   </main>
 
-  <script src="adddeck.js"></script>
+  <!-- Important fix: use relative path -->
+  <script src="./adddeck.js"></script>
 </body>
 </html>
