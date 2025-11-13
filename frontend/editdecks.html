@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let deckName = deckNameStored || "Untitled Deck";
   try {
-    const deckRes = await fetch(`/api/decks/${deckId}/detail`);
+    const deckRes = await fetch(`./api/decks/${deckId}/detail`);
     const deck = await deckRes.json();
     if (deck.name) deckName = deck.name;
   } catch {
@@ -76,12 +76,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   flashcardHeader.textContent = `Editing ${deckName}`;
 
-  // ==========================
-  // Load existing flashcards
-  // ==========================
   let flashcards = [];
   try {
-    const res = await fetch(`/api/decks/${deckId}/flashcards`);
+    const res = await fetch(`./api/decks/${deckId}/flashcards`);
     flashcards = await res.json();
   } catch (err) {
     console.error(err);
@@ -104,7 +101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
       <button type="button" class="btn btn--secondary remove-flashcard">Remove</button>
     `;
-
     cardDiv.querySelector(".remove-flashcard").addEventListener("click", () => cardDiv.remove());
     flashcardContainer.appendChild(cardDiv);
   }
@@ -132,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const res = await fetch(`/api/decks/${deckId}/flashcards/bulk`, {
+      const res = await fetch(`./api/decks/${deckId}/flashcards/bulk`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ flashcards: updatedCards }),
@@ -157,5 +153,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 </script>
+
 </body>
 </html>
