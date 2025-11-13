@@ -52,11 +52,8 @@
     </section>
   </main>
 
-  <script>
+<script>
 document.addEventListener("DOMContentLoaded", async () => {
-  // ==========================
-  // Validate user and deck
-  // ==========================
   const userId = localStorage.getItem("userId");
   const deckId = localStorage.getItem("currentDeckId");
   const deckNameStored = localStorage.getItem("currentDeckName");
@@ -69,12 +66,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const finishFlashcardsBtn = document.getElementById("finishFlashcards");
   const flashcardHeader = document.getElementById("flashcardHeader");
 
-  // ==========================
-  // Load deck name safely
-  // ==========================
   let deckName = deckNameStored || "Untitled Deck";
   try {
-    const deckRes = await fetch(`http://localhost:3000/api/decks/${deckId}/detail`);
+    const deckRes = await fetch(`/api/decks/${deckId}/detail`);
     const deck = await deckRes.json();
     if (deck.name) deckName = deck.name;
   } catch {
@@ -87,21 +81,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==========================
   let flashcards = [];
   try {
-    const res = await fetch(`http://localhost:3000/api/decks/${deckId}/flashcards`);
+    const res = await fetch(`/api/decks/${deckId}/flashcards`);
     flashcards = await res.json();
   } catch (err) {
     console.error(err);
     alert("Failed to load flashcards.");
   }
 
-  // ==========================
-  // Function to create flashcard input
-  // ==========================
   function createFlashcardInput(term = "", definition = "", id = null) {
     const cardDiv = document.createElement("div");
     cardDiv.className = "flashcard-input glass";
-
-    // ✅ Set dataset for existing cards
     if (id) cardDiv.dataset.cardId = id;
 
     cardDiv.innerHTML = `
@@ -116,33 +105,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       <button type="button" class="btn btn--secondary remove-flashcard">Remove</button>
     `;
 
-    // Remove card
     cardDiv.querySelector(".remove-flashcard").addEventListener("click", () => cardDiv.remove());
-
     flashcardContainer.appendChild(cardDiv);
   }
 
-  // ==========================
-  // Populate existing flashcards or initialize empty deck
-  // ==========================
   if (flashcards.length > 0) {
     flashcards.forEach(fc => createFlashcardInput(fc.term, fc.definition, fc.id));
   } else {
-    createFlashcardInput(); // Empty deck, show one input
+    createFlashcardInput();
   }
 
-  // Add new flashcard
   addAnotherFlashcard.addEventListener("click", () => createFlashcardInput());
 
-  // ==========================
-  // Save updated flashcards
-  // ==========================
   finishFlashcardsBtn.addEventListener("click", async () => {
     const updatedCards = [];
     document.querySelectorAll(".flashcard-input").forEach(block => {
       const term = block.querySelector(".flashcard-term").value.trim();
       const definition = block.querySelector(".flashcard-definition").value.trim();
-      // ✅ Convert dataset to number for backend
       const id = block.dataset.cardId ? Number(block.dataset.cardId) : null;
       if (term && definition) updatedCards.push({ id, term, definition });
     });
@@ -153,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/decks/${deckId}/flashcards/bulk`, {
+      const res = await fetch(`/api/decks/${deckId}/flashcards/bulk`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ flashcards: updatedCards }),
@@ -169,14 +148,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error saving flashcards.");
     }
   });
+
   document.querySelectorAll('.coming-soon').forEach(el => {
     el.addEventListener('click', (e) => {
-      e.preventDefault(); // Stop navigation
+      e.preventDefault();
       alert('Feature coming soon!');
     });
   });
 });
 </script>
-
 </body>
 </html>
