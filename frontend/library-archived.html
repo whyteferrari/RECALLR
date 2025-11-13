@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr - Archived Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="library-archived.css">
+  <style>
+    .no-items-message {
+      font-size: 1.2rem;
+      color: #888;
+      text-align: center;
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Component -->
+  <aside class="sidebar glass">
+    <div class="sidebar__logo">Recallr</div>
+    <div class="sidebar__divider"></div>
+    <a href="adddeck.html" class="sidebar__button">Add Deck</a>
+    <div class="sidebar__button coming-soon">Add Folder</div>
+    <div class="sidebar__divider"></div>
+    <nav class="sidebar__nav">
+      <a href="dashboard.html" class="sidebar__link">Home</a>
+      <a href="library-ongoing.html" class="sidebar__link">My Library</a>
+      <div class="sidebar__link coming-soon">Settings</div>
+      <div class="sidebar__divider"></div>
+      <div class="sidebar__link coming-soon">Public Decks</div>
+      <div class="sidebar__link coming-soon">Public Folders</div>
+    </nav>
+    <a href="login.html" class="sidebar__logout">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header__text">
+        <h1>My Library</h1>
+      </div>
+      <div class="buttons-container">
+        <a href="library-ongoing.html" class="text-wrapper-2">Ongoing</a>
+        <a href="library-archived.html" class="text-wrapper-6">Archived</a>
+      </div>
+    </header>
+
+    <!-- Folders Section (No archived folders) -->
+    <section class="recently-studied glass">
+      <div class="recently-studied__header">
+        <h2 class="recently-studied__title">Folders</h2>
+      </div>
+      <div class="deck-grid" id="foldersContainer"></div>
+      <div id="foldersEmpty" class="no-items-message" style="display:block;">No archived folders</div>
+    </section>
+
+    <!-- Decks Section -->
+    <section class="decks glass">
+      <div class="decks__header">
+        <h2 class="decks__title">Decks</h2>
+      </div>
+      <div class="decks-grid" id="decksContainer"></div>
+      <div id="decksEmpty" class="no-items-message" style="display:none;">No archived decks yet</div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("No user detected. Please login first.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const decksContainer = document.getElementById("decksContainer");
+      const decksEmpty = document.getElementById("decksEmpty");
+
+      try {
+        // Fetch archived decks and all flashcards
+        const [decksRes, flashcardsRes] = await Promise.all([
+          fetch(`http://localhost:3000/api/decks/${userId}/archived`),
+          fetch(`http://localhost:3000/api/flashcards/${userId}`)
+        ]);
+
+        const decks = await decksRes.json();
+        const flashcards = await flashcardsRes.json();
+        console.log('Archived decks:', decks);
+
+        if (!decks.length) {
+          decksEmpty.style.display = "block";
+        } else {
+          decksEmpty.style.display = "none";
+          decksContainer.innerHTML = "";
+
+          decks.forEach(deck => {
+            const termCount = flashcards.filter(f => f.deckId === deck.deck_id).length;
+
+            const div = document.createElement("div");
+            div.className = "deck-card glass";
+            div.dataset.id = deck.deck_id;
+            div.innerHTML = `
+              <div class="deck-card__indicator" style="background: ${deck.color || '#5D9CFF'};"></div>
+              <div class="deck-card__folder">${deck.folder || "No Folder"}</div>
+              <div class="deck-card__name">${deck.name}</div>
+              <div class="deck-card__terms">${termCount} Terms</div>
+              <div class="deck-card__menu glass">
+                <div class="task-item__menu-dot"></div>
+                <div class="task-item__menu-dot"></div>
+                <div class="task-item__menu-dot"></div>
+              </div>
+              <div class="dropdown-menu glass">
+                <button class="dropdown-item share">Recover</button>
+                <button class="dropdown-item archive">Delete</button>
+              </div>
+            `;
+            decksContainer.appendChild(div);
+          });
+        }
+
+        // Dropdown toggle
+        document.addEventListener('click', e => {
+          if (!e.target.closest('.deck-card__menu') && !e.target.closest('.dropdown-menu')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('dropdown-menu--open'));
+          }
+        });
+
+        document.querySelectorAll('.deck-card__menu').forEach(menuBtn => {
+          menuBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            const dropdown = menuBtn.parentElement.querySelector('.dropdown-menu');
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+              if (menu !== dropdown) menu.classList.remove('dropdown-menu--open');
+            });
+            dropdown.classList.toggle('dropdown-menu--open');
+          });
+        });
+
+        // Recover / Delete actions
+        document.addEventListener('click', async e => {
+          const card = e.target.closest('.deck-card');
+          if (!card) return;
+          const id = card.dataset.id;
+
+          if (e.target.classList.contains('share')) {
+            await fetch(`http://localhost:3000/api/decks/${id}/recover`, { method: 'POST' });
+            card.remove();
+          }
+          if (e.target.classList.contains('archive')) {
+            await fetch(`http://localhost:3000/api/decks/${id}`, { method: 'DELETE' });
+            card.remove();
+          }
+        });
+
+      } catch (err) {
+        console.error("Error loading archived library:", err);
+      }
+      document.querySelectorAll('.coming-soon').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault(); // Stop navigation
+      alert('Feature coming soon!');
+    });
+  });
+    });
+  </script>
+</body>
+</html>

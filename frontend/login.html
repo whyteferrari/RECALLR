@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recallr Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="login.css" />
+  </head>
+
+  <body>
+    <div class="LOGIN">
+      <!-- Floating background blobs -->
+      <div class="blurcircle"></div>
+      <div class="blurcircle-2"></div>
+      <div class="blurcircle-3"></div>
+      <div class="blurcircle-4"></div>
+
+      <!-- Glass login card -->
+      <div class="login-card">
+        <h2>Recallr</h2>
+        <h1>Welcome Back!</h1>
+
+        <form id="loginForm">
+          <div class="input-group">
+            <label for="username">Email or Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your email or username"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <div class="options">
+            <label><input type="checkbox" id="remember"> Remember me</label>
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Login</button>
+
+          <div class="signup">
+            Don’t have an account? <a href="signup.html">Sign up</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+
+
+  </body>
+</html>

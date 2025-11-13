@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr - Study Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  
+  <!-- Sidebar Component -->
+  <aside class="sidebar glass">
+    <div class="sidebar__logo">Recallr</div>
+    
+    <div class="sidebar__divider"></div>
+    
+    <a href="adddeck.html" class="sidebar__button">Add Deck</a>
+    <a href="" class="sidebar__button coming-soon">Add Folder</a>
+    
+    <div class="sidebar__divider"></div>
+    
+    <nav class="sidebar__nav">
+      <a href="dashboard.html" class="sidebar__link">Home</div>
+      <a href="library-ongoing.html" class="sidebar__link">My Library</a>
+      <div class="sidebar__link coming-soon">Settings</div>
+      <div class="sidebar__divider"></div>
+      <div class="sidebar__link coming-soon">Public Decks</div>
+      <div class="sidebar__link coming-soon">Public Folders</div>
+      <div class="sidebar__divider"></div>
+    </nav>
+    
+    <a href="login.html" class="sidebar__logout">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header Component -->
+    <header class="header">
+      <div class="header__text">
+        <h1>Welcome back, [User]!</h1>
+        <p>Ready to study?</p>
+      </div>
+      <div class="header__icons">
+        <div class="icon-placeholder"></div>
+        <div class="icon-placeholder"></div>
+      </div>
+    </header>
+
+    <!-- Study Plan Component -->
+    <section class="study-plan glass">
+      <div class="study-plan__header">
+        <div>
+          <h2 class="study-plan__title">Today's Study Plan</h2>
+          <p class="study-plan__date">September 20, 2025 | 12:00 AM</p>
+        </div>
+        <button class="study-plan__add-btn">Add Task</button>
+      </div>
+      
+      <div class="task-list">
+        <!-- Task Item 1 - Active -->
+        <div class="task-item glass">
+          <div class="task-item__indicator" style="background: #5D9CFF;"></div>
+          <div class="task-item__content">
+            <div class="task-item__time">10:00 AM</div>
+            <div class="task-item__name">Deck 1</div>
+            <div class="task-item__terms">232 Terms</div>
+          </div>
+          <div class="task-item__checkbox"></div>
+          <div class="task-item__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Task Item 2 - Active -->
+        <div class="task-item glass">
+          <div class="task-item__indicator" style="background: #008080;"></div>
+          <div class="task-item__content">
+            <div class="task-item__time">1:00 PM</div>
+            <div class="task-item__name">Deck 5</div>
+            <div class="task-item__terms">232 Terms</div>
+          </div>
+          <div class="task-item__checkbox"></div>
+          <div class="task-item__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Task Item 3 - Disabled -->
+        <div class="task-item glass task-item--disabled">
+          <div class="task-item__indicator" style="background: #FFD700;"></div>
+          <div class="task-item__content">
+            <div class="task-item__time">4:00 PM</div>
+            <div class="task-item__name">Deck 6</div>
+            <div class="task-item__terms">232 Terms</div>
+          </div>
+          <div class="task-item__checkbox"></div>
+          <div class="task-item__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid Section: Streaks and Quick Notes -->
+    <div class="grid-section">
+      <!-- Streaks Component -->
+      <section class="streaks glass">
+        <h2 class="streaks__title">Streaks</h2>
+        <p class="streaks__subtitle">Start studying to have a streak!</p>
+        
+        <div class="streaks__calendar">
+          <div class="streaks__days">
+            <div class="streaks__day-label">Sun</div>
+            <div class="streaks__day-label">Mon</div>
+            <div class="streaks__day-label">Tue</div>
+            <div class="streaks__day-label">Wed</div>
+            <div class="streaks__day-label">Thu</div>
+            <div class="streaks__day-label">Fri</div>
+            <div class="streaks__day-label">Sat</div>
+          </div>
+          
+          <div class="streaks__week">
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+          </div>
+          
+          <div class="streaks__week">
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+          </div>
+          
+          <div class="streaks__week">
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+          </div>
+          
+          <div class="streaks__week">
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active"></div>
+            <div class="streaks__cell streaks__cell--active streaks__cell--current"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Notes Component -->
+      <section class="quick-notes glass">
+        <div class="quick-notes__header">
+          <h2 class="quick-notes__title">Quick Notes</h2>
+          <button class="quick-notes__edit-btn coming soon">Edit Notes</button>
+        </div>
+        
+        <div class="quick-notes__lines">
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+          <div class="quick-notes__line"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Recently Studied Component -->
+    <section class="recently-studied glass">
+      <h2 class="recently-studied__title">Recently Studied</h2>
+      
+      <div class="deck-grid">
+        <!-- Deck Card 1 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #5D9CFF;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 1</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Deck Card 2 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #FF00FF;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 2</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Deck Card 3 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #C0C0C0;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 3</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Deck Card 4 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #FF6EC7;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 4</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+
+        <!-- Deck Card 5 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #008080;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 5</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+	<div class="dropdown-menu glass">
+ 	 <button class="dropdown-item share">Share</button>
+	  <button class="dropdown-item archive">Archive</button>
+	</div>
+
+        </div>
+
+        <!-- Deck Card 6 -->
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #FFD700;"></div>
+          <div class="deck-card__folder">Folder Name</div>
+          <div class="deck-card__name">Deck 6</div>
+          <div class="deck-card__terms">232 Terms</div>
+          <div class="deck-card__menu glass">
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+            <div class="task-item__menu-dot"></div>
+          </div>
+<div class="dropdown-menu glass">
+  <button class="dropdown-item share">Share</button>
+  <button class="dropdown-item archive">Archive</button>
+</div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Task Modal -->
+  <div class="modal" id="addTaskModal">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="modal__title">Add New Task</h2>
+        <button class="modal__close" id="closeModal">×</button>
+      </div>
+      
+      <form class="modal__form" id="addTaskForm">
+        <div class="form__group">
+          <label class="form__label" for="deckSelect">Select Deck</label>
+          <select class="form__select" id="deckSelect" required>
+            <option value="">Choose a deck...</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="taskTime">Study Time</label>
+          <input 
+            type="time" 
+            class="form__input" 
+            id="taskTime" 
+            required
+          >
+        </div>
+
+        <div class="form__group">
+          <label class="form__label">Color Tag</label>
+          <div class="color-picker">
+            <input 
+              type="color" 
+              class="color-input" 
+              id="colorInput" 
+              value="#5D9CFF"
+            >
+            <div class="color-preview" id="colorPreview">#5D9CFF</div>
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn--primary">Add Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Notes Modal -->
+  <div class="modal" id="editNotesModal">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="modal__title">Edit Quick Notes</h2>
+        <button class="modal__close" id="closeNotesModal">×</button>
+      </div>
+      
+      <form class="modal__form" id="editNotesForm">
+        <div class="form__group">
+          <label class="form__label" for="notesEditor">Your Notes</label>
+          <textarea 
+            class="form__input notes-editor" 
+            id="notesEditor"
+            placeholder="Write your notes here...
+
+Use format for flashcards:
+Q: Your question here?
+A: Your answer here
+
+Q: Another question?
+A: Another answer"
+            rows="10"
+          ></textarea>
+          <p class="form__help-text">Tip: Use Q: and A: format to easily convert to flashcards</p>
+        </div>
+
+        <div class="form__group">
+          <label class="form__checkbox-group" for="convertToFlashcards">
+            <input 
+              type="checkbox" 
+              class="form__checkbox" 
+              id="convertToFlashcards"
+            >
+            <span class="form__checkbox-label">Convert to flashcards (Q&A format)</span>
+          </label>
+          <p class="form__help-text">This will create a new deck from your Q&A formatted notes</p>
+        </div>
+
+        <div class="form__group" id="deckNameGroup" style="display: none;">
+          <label class="form__label" for="newDeckName">New Deck Name</label>
+          <input 
+            type="text" 
+            class="form__input" 
+            id="newDeckName"
+            placeholder="e.g., Quick Notes Flashcards"
+          >
+        </div>
+
+        <div class="form__group" id="flashcardColorGroup" style="display: none;">
+          <label class="form__label">Deck Color</label>
+          <div class="color-picker">
+            <input 
+              type="color" 
+              class="color-input" 
+              id="flashcardColorInput" 
+              value="#64b9ff"
+            >
+            <div class="color-preview" id="flashcardColorPreview">#64B9FF</div>
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" id="cancelNotesBtn">Cancel</button>
+          <button type="submit" class="btn btn--primary">Save Notes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- At the end of body, before </body> -->
+<script src="dashboard.js"></script>
+
+</body>
+</html>

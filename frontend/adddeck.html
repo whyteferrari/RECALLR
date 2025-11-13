@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr - Add Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar glass">
+    <div class="sidebar__logo">Recallr</div>
+    <div class="sidebar__divider"></div>
+    <a href="adddeck.html" class="sidebar__button">Add Deck</a>
+    <a href="#" class="sidebar__button coming-soon">Add Folder</a>
+    <div class="sidebar__divider"></div>
+    <nav class="sidebar__nav">
+      <a href="dashboard.html" class="sidebar__link">Home</a>
+      <a href="library-ongoing.html" class="sidebar__link">My Library</a>
+      <div class="sidebar__link coming-soon">Settings</div>
+      <div class="sidebar__divider"></div>
+      <div class="sidebar__link coming-soon">Public Decks</div>
+      <div class="sidebar__link coming-soon">Public Folders</div>
+      <div class="sidebar__divider"></div>
+    </nav>
+    <a href="login.html" class="sidebar__logout">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header__text">
+        <h1>Add a New Deck</h1>
+        <p>Create your deck and start studying!</p>
+      </div>
+      <div class="header__icons">
+        <div class="icon-placeholder"></div>
+        <div class="icon-placeholder"></div>
+      </div>
+    </header>
+
+    <!-- Deck Form -->
+    <section class="study-plan glass" id="deckSection">
+      <div class="study-plan__header">
+        <h2 class="study-plan__title">New Deck Details</h2>
+      </div>
+      <form id="addDeckForm">
+        <div class="form__group">
+          <label for="deckName" class="form__label">Deck Name</label>
+          <input type="text" id="deckName" class="form__input" placeholder="e.g., Biology Chapter 1" required>
+        </div>
+
+        <div class="form__group">
+          <label for="folderSelect" class="form__label">Select Folder</label>
+          <select id="folderSelect" class="form__select">
+            <option value="">None</option>
+            <option value="folder1">Folder 1</option>
+            <option value="folder2">Folder 2</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label class="form__label">Deck Color</label>
+          <div class="color-picker">
+            <input type="color" id="deckColor" class="color-input" value="#5D9CFF">
+            <div id="deckColorPreview" class="color-preview">#5D9CFF</div>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <label for="deckDescription" class="form__label">Description</label>
+          <textarea id="deckDescription" class="form__input notes-editor" rows="5" placeholder="Optional description..."></textarea>
+        </div>
+
+        <div class="modal__actions">
+          <button type="reset" class="btn btn--secondary">Cancel</button>
+          <button type="submit" class="btn btn--primary">Create Deck</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Deck Preview -->
+    <section class="recently-studied glass">
+      <h2 class="recently-studied__title">Deck Preview</h2>
+      <div class="deck-grid">
+        <div class="deck-card glass">
+          <div class="deck-card__indicator" style="background: #5D9CFF;"></div>
+          <div class="deck-card__folder" id="previewDeckFolder">Folder Name</div>
+          <div class="deck-card__name" id="previewDeckName">New Deck</div>
+          <div class="deck-card__terms" id="previewDeckTerms">0 Terms</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="adddeck.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr - Edit Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar glass">
+    <div class="sidebar__logo">Recallr</div>
+    <div class="sidebar__divider"></div>
+    <a href="adddeck.html" class="sidebar__button">Add Deck</a>
+    <a href="#" class="sidebar__button coming-soon">Add Folder</a>
+    <div class="sidebar__divider"></div>
+    <nav class="sidebar__nav">
+      <a href="dashboard.html" class="sidebar__link">Home</a>
+      <a href="library-ongoing.html" class="sidebar__link">My Library</a>
+      <div class="sidebar__link coming-soon">Settings</div>
+      <div class="sidebar__divider"></div>
+      <div class="sidebar__link coming-soon">Public Decks</div>
+      <div class="sidebar__link coming-soon">Public Folders</div>
+      <div class="sidebar__divider"></div>
+    </nav>
+    <a href="login.html" class="sidebar__logout">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header__text">
+        <h1>Edit Deck Flashcards</h1>
+        <p>Add or edit flashcards for your deck!</p>
+      </div>
+    </header>
+
+    <!-- Flashcard Section -->
+    <section class="study-plan glass" id="flashcardSection">
+      <div class="study-plan__header">
+        <h2 class="study-plan__title" id="flashcardHeader">Editing Deck...</h2>
+      </div>
+      <form id="flashcardForm">
+        <div id="flashcardContainer" class="flashcard-container"></div>
+        <div class="modal__actions">
+          <button type="button" id="addAnotherFlashcard" class="btn btn--primary">+ Add Another Card</button>
+          <button type="button" id="finishFlashcards" class="btn btn--secondary">Save Changes</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  // ==========================
+  // Validate user and deck
+  // ==========================
+  const userId = localStorage.getItem("userId");
+  const deckId = localStorage.getItem("currentDeckId");
+  const deckNameStored = localStorage.getItem("currentDeckName");
+
+  if (!userId) return window.location.href = "login.html";
+  if (!deckId) return window.location.href = "library-ongoing.html";
+
+  const flashcardContainer = document.getElementById("flashcardContainer");
+  const addAnotherFlashcard = document.getElementById("addAnotherFlashcard");
+  const finishFlashcardsBtn = document.getElementById("finishFlashcards");
+  const flashcardHeader = document.getElementById("flashcardHeader");
+
+  // ==========================
+  // Load deck name safely
+  // ==========================
+  let deckName = deckNameStored || "Untitled Deck";
+  try {
+    const deckRes = await fetch(`http://localhost:3000/api/decks/${deckId}/detail`);
+    const deck = await deckRes.json();
+    if (deck.name) deckName = deck.name;
+  } catch {
+    console.warn("Could not fetch deck name, using stored or default.");
+  }
+  flashcardHeader.textContent = `Editing ${deckName}`;
+
+  // ==========================
+  // Load existing flashcards
+  // ==========================
+  let flashcards = [];
+  try {
+    const res = await fetch(`http://localhost:3000/api/decks/${deckId}/flashcards`);
+    flashcards = await res.json();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load flashcards.");
+  }
+
+  // ==========================
+  // Function to create flashcard input
+  // ==========================
+  function createFlashcardInput(term = "", definition = "", id = null) {
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "flashcard-input glass";
+
+    // ✅ Set dataset for existing cards
+    if (id) cardDiv.dataset.cardId = id;
+
+    cardDiv.innerHTML = `
+      <div class="form__group">
+        <label class="form__label">Term</label>
+        <input type="text" class="form__input flashcard-term" value="${term}" placeholder="Enter term" required>
+      </div>
+      <div class="form__group">
+        <label class="form__label">Definition</label>
+        <textarea class="form__input flashcard-definition" rows="3" placeholder="Enter definition" required>${definition}</textarea>
+      </div>
+      <button type="button" class="btn btn--secondary remove-flashcard">Remove</button>
+    `;
+
+    // Remove card
+    cardDiv.querySelector(".remove-flashcard").addEventListener("click", () => cardDiv.remove());
+
+    flashcardContainer.appendChild(cardDiv);
+  }
+
+  // ==========================
+  // Populate existing flashcards or initialize empty deck
+  // ==========================
+  if (flashcards.length > 0) {
+    flashcards.forEach(fc => createFlashcardInput(fc.term, fc.definition, fc.id));
+  } else {
+    createFlashcardInput(); // Empty deck, show one input
+  }
+
+  // Add new flashcard
+  addAnotherFlashcard.addEventListener("click", () => createFlashcardInput());
+
+  // ==========================
+  // Save updated flashcards
+  // ==========================
+  finishFlashcardsBtn.addEventListener("click", async () => {
+    const updatedCards = [];
+    document.querySelectorAll(".flashcard-input").forEach(block => {
+      const term = block.querySelector(".flashcard-term").value.trim();
+      const definition = block.querySelector(".flashcard-definition").value.trim();
+      // ✅ Convert dataset to number for backend
+      const id = block.dataset.cardId ? Number(block.dataset.cardId) : null;
+      if (term && definition) updatedCards.push({ id, term, definition });
+    });
+
+    if (updatedCards.length === 0) {
+      alert("Please add at least one flashcard.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/decks/${deckId}/flashcards/bulk`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flashcards: updatedCards }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save flashcards.");
+
+      alert("Flashcards saved successfully!");
+      window.location.href = "library-ongoing.html";
+    } catch (err) {
+      console.error(err);
+      alert("Error saving flashcards.");
+    }
+  });
+  document.querySelectorAll('.coming-soon').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault(); // Stop navigation
+      alert('Feature coming soon!');
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="signup.css" />
+
+</head>
+<body>
+  <!-- Background Component -->
+  <div class="background"></div>
+
+  <!-- Animated Blur Circles Component -->
+  <div class="blur-circles">
+    <div class="blur-circle"></div>
+    <div class="blur-circle"></div>
+    <div class="blur-circle"></div>
+    <div class="blur-circle"></div>
+  </div>
+
+  <!-- Signup Container -->
+  <div class="signup-container">
+    <!-- Glass Card Component -->
+    <div class="glass-card">
+      <!-- Header Component -->
+      <header class="signup-header">
+        <h1 class="signup-header__logo">Recallr</h1>
+        <h2 class="signup-header__title">Create Account</h2>
+      </header>
+
+      <!-- Form Component -->
+      <form class="signup-form" id="signupForm">
+        <!-- Username Input Group -->
+        <div class="input-group">
+          <label class="input-label" for="username">Username</label>
+          <input 
+            type="text" 
+            class="input-field" 
+            id="username"
+            placeholder="Username"
+            required
+            minlength="3"
+          >
+          <div class="error-message" id="usernameError"></div>
+        </div>
+
+        <!-- Email Input Group -->
+        <div class="input-group">
+          <label class="input-label" for="email">Email</label>
+          <input 
+            type="email" 
+            class="input-field" 
+            id="email"
+            placeholder="Email"
+            required
+          >
+          <div class="error-message" id="emailError"></div>
+        </div>
+
+        <!-- Password Input Group -->
+        <div class="input-group">
+          <label class="input-label" for="password">Password</label>
+          <div class="password-wrapper">
+            <input 
+              type="password" 
+              class="input-field" 
+              id="password"
+              placeholder="Password"
+              required
+              minlength="8"
+            >
+            <button type="button" class="toggle-password" onclick="togglePassword('password', this)">
+              🔓
+            </button>
+          </div>
+          <div class="password-strength" id="passwordStrength">
+            <div class="strength-bar"></div>
+            <div class="strength-bar"></div>
+            <div class="strength-bar"></div>
+            <div class="strength-bar"></div>
+          </div>
+          <div class="password-hint">At least 8 characters</div>
+          <div class="error-message" id="passwordError"></div>
+        </div>
+
+        <!-- Confirm Password Input Group -->
+        <div class="input-group">
+          <label class="input-label" for="confirmPassword">Confirm Password</label>
+          <div class="password-wrapper">
+            <input 
+              type="password" 
+              class="input-field" 
+              id="confirmPassword"
+              placeholder="Confirm Password"
+              required
+            >
+            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)">
+              🔓
+            </button>
+          </div>
+          <div class="error-message" id="confirmError"></div>
+        </div>
+
+        <!-- Submit Button Component -->
+        <button type="submit" class="btn-primary">Sign-up</button>
+      </form>
+
+      <!-- Footer Component -->
+      <footer class="signup-footer">
+        <p class="login-text">
+          Already have an account? <a href="#" class="login-link">Login</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+  <script src="signup.js"></script>
+</body>
+</html>

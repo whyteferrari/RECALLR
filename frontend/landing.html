@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallr - Remember Smarter, Study Faster</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --gradient-purple-cyan: linear-gradient(0deg, rgba(154, 39, 255, 1) 0%, rgba(6, 182, 212, 1) 100%);
+      --gradient-bg: linear-gradient(180deg, rgba(76, 29, 149, 1) 0%, rgba(15, 23, 42, 1) 100%);
+      --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.35);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    }
+
+    body {
+      font-family: "Manjari", Helvetica, sans-serif;
+      background: var(--gradient-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      color: white;
+    }
+
+   /* FLOATING BLUR CIRCLES */
+      .blurcircle, .blurcircle-2, .blurcircle-3, .blurcircle-4 {
+        position: fixed;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        backdrop-filter: blur(35px);
+        -webkit-backdrop-filter: blur(35px);
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 50px rgba(0,0,0,0.2), inset 0 2px 8px rgba(255,255,255,0.1);
+        mix-blend-mode: screen;
+        animation: float 30s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0% { transform: translate(0,0) scale(1); }
+        25% { transform: translate(20px, -30px) scale(1.05); }
+        50% { transform: translate(-25px, 20px) scale(0.95); }
+        75% { transform: translate(15px, 25px) scale(1.1); }
+        100% { transform: translate(0,0) scale(1); }
+      }
+
+      .blurcircle { top: -10vh; left: 60vw; width: 45vw; height: 45vw; animation-duration: 30s; }
+      .blurcircle-2 { top: 50vh; left: -5vw; width: 35vw; height: 35vw; animation-duration: 40s; }
+      .blurcircle-3 { top: 15vh; left: 70vw; width: 25vw; height: 25vw; animation-duration: 35s; }
+      .blurcircle-4 { top: 60vh; left: 20vw; width: 24vw; height: 24vw; animation-duration: 45s; }      /* LOGIN CARD */
+      .login-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(300px, 40vw, 500px);
+        padding: 2rem 3rem;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255,255,255,0.35);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        color: white;
+        text-align: center;
+        z-index: 3;
+      }
+    /* LOGIN CARD */
+    .login-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(300px, 40vw, 500px);
+      padding: 2rem 3rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      color: white;
+      text-align: center;
+      z-index: 3;
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: clamp(1rem, 2vh, 1.5rem) clamp(2rem, 4vw, 4rem);
+      background: rgba(76, 29, 149, 0.8);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .navbar__logo {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar__search {
+      flex: 1;
+      max-width: clamp(15rem, 35vw, 30rem);
+      margin: 0 clamp(1rem, 3vw, 3rem);
+      position: relative;
+    }
+
+    .navbar__search::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 2px;
+      border-radius: 50px;
+      background: var(--gradient-purple-cyan);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .navbar__search-input {
+      width: 100%;
+      padding: clamp(0.5rem, 1vh, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+      border-radius: 50px;
+      border: none;
+      background: transparent;
+      color: white;
+      font-family: "Manjari", Helvetica, sans-serif;
+      font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+      transition: all 0.3s ease;
+    }
+
+    .navbar__search-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .navbar__search-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .navbar__menu {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.5rem, 1.5vw, 1.5rem);
+    }
+
+    .navbar__link {
+      padding: clamp(0.5rem, 1vh, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+      border-radius: 50px;
+      font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .navbar__link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 2px;
+      border-radius: 50px;
+      background: var(--gradient-purple-cyan);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .navbar__link:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .navbar__link--primary {
+      background: var(--gradient-purple-cyan);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .navbar__link--primary::before {
+      display: none;
+    }
+
+    .navbar__link--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+      background: var(--gradient-purple-cyan);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: clamp(23rem, 15vh, 12rem) clamp(2rem, 4vw, 4rem) clamp(4rem, 8vh, 6rem);
+      text-align: center;
+    }
+
+    .hero__title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: clamp(1rem, 2vh, 1.5rem);
+    }
+
+    .hero__subtitle {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      font-weight: 300;
+      line-height: 1.6;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto clamp(2rem, 4vh, 3rem);
+    }
+
+    .hero__arrow {
+      font-size: clamp(2rem, 3vw, 3rem);
+  animation: bounce 6s infinite;
+  cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* Feature Cards Section */
+    .features {
+      padding: clamp(10rem, 6vh, 5rem) clamp(2rem, 4vw, 4rem);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+      gap: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: clamp(3rem, 6vh, 5rem);
+    }
+
+    .feature-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(30px);
+      border: var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: clamp(1rem, 2vw, 1.5rem);
+      padding: clamp(2rem, 4vh, 3rem);
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .feature-card__icon {
+      font-size: clamp(3rem, 5vw, 4rem);
+      margin-bottom: clamp(1rem, 2vh, 1.5rem);
+    }
+
+    .feature-card__title {
+      font-size: clamp(1.25rem, 2vw, 1.75rem);
+      font-weight: 700;
+      margin-bottom: clamp(0.5rem, 1vh, 0.75rem);
+    }
+
+    .feature-card__description {
+      font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+      line-height: 1.5;
+      opacity: 0.85;
+    }
+
+    /* Info Sections */
+    .info-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(30px);
+      border: var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: clamp(1rem, 2vw, 1.5rem);
+      padding: clamp(3rem, 6vh, 5rem) clamp(2rem, 4vw, 4rem);
+      text-align: center;
+      margin-bottom: clamp(2rem, 4vh, 3rem);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .info-section__title {
+      font-size: clamp(1.75rem, 3.5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: clamp(1rem, 2vh, 1.5rem);
+      line-height: 1.2;
+    }
+
+    .info-section__description {
+      font-size: clamp(1rem, 1.5vw, 1.375rem);
+      line-height: 1.6;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: clamp(5rem, 10vh, 8rem) clamp(2rem, 4vw, 4rem);
+      text-align: center;
+    }
+
+    .cta-section__title {
+      font-size: clamp(0rem, 4vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: clamp(2rem, 4vh, 5rem);
+      line-height: 1.2;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: clamp(1rem, 2vh, 1.5rem) clamp(2.5rem, 5vw, 4rem);
+      border-radius: 50px;
+      background: var(--gradient-purple-cyan);
+      color: white;
+      font-size: clamp(1.25rem, 2vw, 1.75rem);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(6, 182, 212, 0.6);
+    }
+
+    /* Mobile Menu Toggle */
+    .navbar__toggle {
+      display: none;
+      flex-direction: column;
+      gap: 0.35rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .navbar__toggle-bar {
+      width: 1.75rem;
+      height: 0.2rem;
+      background: white;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar__search {
+        display: none;
+      }
+
+      .navbar__toggle {
+        display: flex;
+      }
+
+      .navbar__menu {
+        position: fixed;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(76, 29, 149, 0.98);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.5rem;
+        transform: translateY(-100vh);
+        transition: transform 0.3s ease;
+      }
+
+      .navbar__menu--open {
+        transform: translateY(0);
+      }
+
+      .navbar__link {
+        width: 100%;
+        text-align: center;
+      }
+
+      .features__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Blur Circles -->
+  <div class="blur-circles">
+    <div class="blurcircle"></div>
+    <div class="blurcircle-2"></div>
+    <div class="blurcircle-3"></div>
+    <div class="blurcircle-4"></div>
+  </div>
+
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar__container">
+        <a href="#" class="navbar__logo">Recallr</a>
+
+        <div class="navbar__search">
+          <input 
+            type="text" 
+            class="navbar__search-input" 
+            placeholder="Search FAQs..."
+          >
+        </div>
+
+        <button class="navbar__toggle" id="menuToggle" aria-label="Toggle menu">
+          <span class="navbar__toggle-bar"></span>
+          <span class="navbar__toggle-bar"></span>
+          <span class="navbar__toggle-bar"></span>
+        </button>
+
+        <div class="navbar__menu" id="navMenu">
+          <a href="#" class="navbar__link coming-soon">About</a>
+          <a href="#" class="navbar__link coming-soon">Tools</a>
+          <a href="login.html" class="navbar__link">Login</a>
+          <a href="signup.html" class="navbar__link navbar__link--primary">Sign Up</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero__title">
+        Remember Smarter,<br>Study Faster
+      </h1>
+      <p class="hero__subtitle">
+        Recallr turns studying into an engaging, stylish,<br>and memorable experience.
+      </p>
+      <div class="hero__arrow">↓</div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+      <div class="features__grid">
+        <div class="feature-card">
+          <div class="feature-card__icon">🎵</div>
+          <h3 class="feature-card__title">Music for Ambiance</h3>
+          <p class="feature-card__description">
+            Focus better with curated study playlists and ambient sounds.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-card__icon">📚</div>
+          <h3 class="feature-card__title">Smart Study Modes</h3>
+          <p class="feature-card__description">
+            Adapt your study style with AI-powered learning techniques.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-card__icon">🤝</div>
+          <h3 class="feature-card__title">Collaboration</h3>
+          <p class="feature-card__description">
+            Study together with friends and share your progress.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-card__icon">📅</div>
+          <h3 class="feature-card__title">Study Planner</h3>
+          <p class="feature-card__description">
+            Stay organized with smart scheduling and reminders.
+          </p>
+        </div>
+      </div>
+
+      <!-- Info Section 1 -->
+      <div class="info-section">
+        <h2 class="info-section__title">
+          Turn Any Material Into<br>Flashcards
+        </h2>
+        <p class="info-section__description">
+          Easily convert notes and slides into interactive flashcards.
+        </p>
+      </div>
+
+      <!-- Info Section 2 -->
+      <div class="info-section">
+        <h2 class="info-section__title">
+          Ace any test with confidence
+        </h2>
+        <p class="info-section__description">
+          Use personalized quizzes, practice tests, and timed study sessions to master any subject.
+        </p>
+      </div>
+
+      <!-- Info Section 3 -->
+      <div class="info-section">
+        <h2 class="info-section__title">
+          Study anywhere, anytime
+        </h2>
+        <p class="info-section__description">
+          Get Recallr on your phone and have access to your decks, practice quizzes, and smart study modes—right in your pocket.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2 class="cta-section__title">
+        Your smarter study journey<br>begins here
+      </h2>
+      <a href="login.html" class="cta-button">Start Learning Now</a>
+    </section>
+  </div>
+
+  <script>
+
+    const heroArrow = document.querySelector('.hero__arrow');
+  const heroSection = document.querySelector('.hero');
+  const featuresSection = document.querySelector('.features');
+
+  // Scroll hero arrow to features section
+  heroArrow.addEventListener('click', () => {
+    featuresSection.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Show/hide arrow based on scroll position
+  window.addEventListener('scroll', () => {
+    const heroBottom = heroSection.getBoundingClientRect().bottom;
+
+    if (heroBottom > 0) {
+      // User is still in hero section
+      heroArrow.style.opacity = '1';
+      heroArrow.style.pointerEvents = 'auto';
+    } else {
+      // User scrolled past hero section
+      heroArrow.style.opacity = '0';
+      heroArrow.style.pointerEvents = 'none';
+    }
+  });
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('navbar__menu--open');
+      
+      const bars = menuToggle.querySelectorAll('.navbar__toggle-bar');
+      if (navMenu.classList.contains('navbar__menu--open')) {
+        bars[0].style.transform = 'rotate(45deg) translateY(0.6rem)';
+        bars[1].style.opacity = '0';
+        bars[2].style.transform = 'rotate(-45deg) translateY(-0.6rem)';
+      } else {
+        bars[0].style.transform = 'none';
+        bars[1].style.opacity = '1';
+        bars[2].style.transform = 'none';
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navbar__menu') && !e.target.closest('.navbar__toggle')) {
+        navMenu.classList.remove('navbar__menu--open');
+        const bars = menuToggle.querySelectorAll('.navbar__toggle-bar');
+        bars[0].style.transform = 'none';
+        bars[1].style.opacity = '1';
+        bars[2].style.transform = 'none';
+      }
+      document.querySelectorAll('.coming-soon').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault(); // Stop navigation
+      alert('Feature coming soon!');
+    });
+  });
+    });
+  </script>
+</body>
+</html>
