@@ -38,12 +38,14 @@ colorInput.addEventListener("input", () => {
   colorPreview.textContent = colorInput.value.toUpperCase();
   previewIndicator.style.background = colorInput.value;
 });
-document.querySelectorAll('.coming-soon').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault(); // Stop navigation
-      alert('Feature coming soon!');
-    });
+
+document.querySelectorAll(".coming-soon").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    alert("Feature coming soon!");
   });
+});
+
 // ==========================
 // Deck Creation
 // ==========================
@@ -58,7 +60,10 @@ addDeckForm.addEventListener("submit", async (e) => {
   if (!name) return alert("Deck name is required.");
 
   try {
-    const res = await fetch("http://localhost:3000/api/decks", {
+    // ✅ Dynamic backend URL based on current origin
+    const apiUrl = `${window.location.origin}/api/decks`;
+
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -81,21 +86,18 @@ addDeckForm.addEventListener("submit", async (e) => {
     console.log("✅ Deck created:", data);
     createdDeckId = data.id;
 
-    // ==========================
     // Store deck info in localStorage
-    // ==========================
     localStorage.setItem("currentDeckId", data.id);
     localStorage.setItem("currentDeckName", data.name);
 
     alert("Deck created successfully!");
 
-    // ==========================
-    // Redirect to editdecks.html with URL params
-    // ==========================
-    window.location.href = `editdecks.html?deckId=${data.id}&deckName=${encodeURIComponent(data.name)}`;
+    // Redirect to editdecks.html
+    window.location.href = `editdecks.html?deckId=${data.id}&deckName=${encodeURIComponent(
+      data.name
+    )}`;
   } catch (err) {
     console.error("💥 Error adding deck:", err);
     alert("Error adding deck.");
   }
-  
 });
