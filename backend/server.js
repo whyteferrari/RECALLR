@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const { Pool } = require("pg");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
@@ -16,16 +17,26 @@ const db = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: 5432,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false }
 });
 
 db.connect()
   .then(() => console.log("✅ Connected to PostgreSQL database 'recallr'"))
   .catch(err => console.error("❌ DB connection error:", err));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
+
+// =====================
+// FRONTEND ROUTE
+// =====================
+// This serves your landing page (frontend is outside backend)
+app.get("/", (req, res) => {
+  const landingPath = path.join(__dirname, "..", "frontend", "landing.html");
+  console.log("Serving:", landingPath);
+  res.sendFile(landingPath, (err) => {
+    if (err) {
+      console.error("❌ Error sending landing.html:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 });
 
 
