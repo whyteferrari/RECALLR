@@ -21,6 +21,9 @@ const db = new Pool({
 db.connect()
   .then(() => console.log("✅ Connected to PostgreSQL database 'recallr'"))
   .catch(err => console.error("❌ DB connection error:", err));
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/landing.html"); // or library.html, etc.
+});
 
 // =====================
 // SIGNUP
